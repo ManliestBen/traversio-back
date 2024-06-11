@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken'
-
+import { v4 as uuidv4 } from 'uuid'
+import Nodemailer from 'nodemailer'
 import { User } from '../models/user.js'
 import { Profile } from '../models/profile.js'
 
@@ -94,7 +95,24 @@ async function resetPassword(req, res) {
 async function initiateResetPassword(req, res) {
   try {
     // generate a temp password with UUID
+    const tempPassword = uuidv4()
+
     // update the password for the user in the database
+    const user = await User.findOne({email: req.body.email})
+    if (!user) throw new Error('User not found')
+    
+    user.password = tempPassword
+    await user.save()
+
+    sendMail(
+      req.body.email,
+      "New password from Traversio Travel!",
+      `This temporary password can be used to change your password in the app!  
+      
+      Password:  ${tempPassword}
+      `
+    )
+
     // email the password to the user's email with nodemailer
     res.json({message: 'Success'})
   } catch (err) {
@@ -103,6 +121,31 @@ async function initiateResetPassword(req, res) {
 }
 
 /* --== Helper Functions ==-- */
+
+function sendMail(email, subject, text){
+  let transporter = Nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
+    auth: {
+      user: "traversiotravel@gmail.com",
+      pass: process.env.GOOGLE_APP_PASSWORD
+    }
+  })
+
+  transporter.sendMail({
+    from: 'traversiotravel@gmail.com',
+    to: email,
+    subject: `${subject}`,
+    text: `${text}`,
+  })
+
+}
+
+
+
+
+
 
 function handleAuthError(err, res) {
   console.log(err)
