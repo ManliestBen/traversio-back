@@ -33,10 +33,7 @@ const propertySchema = new Schema({
   numBathrooms: Number,
   numBedrooms: Number,
   photos: [String],
-  amenities: {
-    type: String,
-    enum: ['Pool', 'Game Room', 'Grill', 'Air Conditioning', 'Wifi', 'Kitchen', 'Hot Tub', 'Washer/Dryer', 'Covered Parking', 'Balcony', 'Beach Access', 'TV', 'Sauna', 'Refrigerator', 'Dishwasher', 'Oven', 'Microwave', 'Gym', 'Hair Dryer']
-  },
+  amenities: [String],
   petFriendly: Boolean,
   datesBooked: [Date],
   owner: { 
