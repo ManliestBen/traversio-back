@@ -7,6 +7,8 @@ const router = Router()
 /*---------- Public Routes ----------*/
 router.post('/signup', authCtrl.signup)
 router.post('/login', authCtrl.login)
+router.post('/initiate-reset-password', authCtrl.initiateResetPassword)
+router.post('/reset-password', authCtrl.resetPassword)
 
 /*---------- Protected Routes ----------*/
 router.use(decodeUserFromToken)

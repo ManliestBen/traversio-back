@@ -72,6 +72,36 @@ async function changePassword(req, res) {
   }
 }
 
+async function resetPassword(req, res) {
+  try {
+    const user = await User.findOne({email: req.body.email})
+    if (!user) throw new Error('User not found')
+
+    const isMatch = user.comparePassword(req.body.password)
+    if (!isMatch) throw new Error('Incorrect password')
+
+    user.password = req.body.newPassword
+    await user.save()
+
+    const token = createJWT(user)
+    res.json({ token })
+    
+  } catch (err) {
+    handleAuthError(err, res)
+  }
+}
+
+async function initiateResetPassword(req, res) {
+  try {
+    // generate a temp password with UUID
+    // update the password for the user in the database
+    // email the password to the user's email with nodemailer
+    res.json({message: 'Success'})
+  } catch (err) {
+    handleAuthError(err, res)
+  }
+}
+
 /* --== Helper Functions ==-- */
 
 function handleAuthError(err, res) {
@@ -88,4 +118,4 @@ function createJWT(user) {
   return jwt.sign({ user }, process.env.SECRET, { expiresIn: '24h' })
 }
 
-export { signup, login, changePassword }
+export { signup, login, changePassword, initiateResetPassword, resetPassword }
