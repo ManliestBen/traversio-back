@@ -21,7 +21,9 @@ async function show(req, res) {
 
 async function create(req, res) {
   try {
-    
+    req.body.owner = req.user.profile
+    const property = await Property.create(req.body)
+    res.json(property)
   } catch (err) {
     console.log(err)
     res.json({err})
