@@ -3,7 +3,8 @@ import { Property } from "../models/property.js"
 
 async function index(req, res) {
   try {
-    
+    const properties = await Property.find({}).populate('owner')
+    res.json(properties)
   } catch (err) {
     console.log(err)
     res.json({err})
