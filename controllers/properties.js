@@ -13,7 +13,8 @@ async function index(req, res) {
 
 async function show(req, res) {
   try {
-    
+    const property = await Property.findById(req.params.propertyId).populate('owner')
+    res.json(property)
   } catch (err) {
     console.log(err)
     res.json({err})
