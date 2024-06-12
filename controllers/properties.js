@@ -43,7 +43,8 @@ async function update(req, res) {
 
 async function deleteProperty(req, res) {
   try {
-    
+    const deletedProperty = await Property.findByIdAndDelete(req.params.propertyId)
+    res.json(deletedProperty)
   } catch (err) {
     console.log(err)
     res.json({err})
