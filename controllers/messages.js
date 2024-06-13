@@ -26,6 +26,20 @@ async function addReply(req, res) {
   }
 }
 
+async function markRead(req, res) {
+  try {
+    await Message.findByIdAndUpdate(req.params.messageId, {read: true}, {new: true})
+    const profile = await Profile.findById(req.user.profile).populate({
+      path: 'messages',
+      populate: [{path: 'sender'}, {path: 'recipient'}]
+    })
+    res.json(profile)
+  } catch (err) {
+    console.log(err)
+    res.json({err})
+  }
+}
+
 async function deleteMessage(req, res) {
   try {
     
@@ -38,5 +52,6 @@ async function deleteMessage(req, res) {
 export {
   create,
   addReply,
-  deleteMessage as delete
+  deleteMessage as delete,
+  markRead
 }
