@@ -3,6 +3,10 @@ import mongoose from 'mongoose'
 const Schema = mongoose.Schema
 
 const tripSchema = new Schema({
+  plannedBy: { 
+    type: Schema.Types.ObjectId, 
+    ref: 'Profile' 
+  },
   name: String,
   arrivalDate: Date,
   departureDate: Date,

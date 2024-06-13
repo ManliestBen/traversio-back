@@ -1,4 +1,5 @@
 import { Profile } from '../models/profile.js'
+import { Property } from '../models/property.js'
 import { v2 as cloudinary } from 'cloudinary'
 
 async function index(req, res) {
@@ -40,4 +41,27 @@ async function addPhoto(req, res) {
   }
 }
 
-export { index, addPhoto, show }
+async function addTrip(req, res) {
+  try {
+    // look up the logged in user's profile
+    const profile = await Profile.findById(req.user.profile)
+    // add the trip to the profile
+    profile.trips.push(req.body)
+    // save the profile
+    await profile.save()
+    // look up the property
+    const property = await Property.findById(req.body.property)
+    // add req.body.newDatesBooked into datesBooked array
+    req.body.newDatesBooked.forEach(date => {
+      property.datesBooked.push(date)
+    })
+    // save the property
+    await property.save()
+    res.json(property)
+  } catch (err) {
+    console.log(err)
+    res.status(500).json(err)
+  }
+}
+
+export { index, addPhoto, show, addTrip }
